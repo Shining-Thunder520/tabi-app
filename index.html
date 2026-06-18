@@ -69,7 +69,21 @@
     font-size:18px;
     font-weight:bold;
 }
-</style>
+.add-button{
+    margin:15px 0;
+    padding:10px;
+    border:2px solid #000;
+    border-radius:10px;
+    display:inline-block;
+    cursor:pointer;
+}
+
+.tag{
+    font-size:14px;
+    margin-left:5px;
+}
+    </style>
+    
 </head>
 
 <body>
@@ -138,10 +152,30 @@
 
 </div>
 
-    <div id="packingPage" class="hidden">
+ <div id="packingPage" class="hidden">
 
 <div class="back-button" onclick="closePacking()">
 ← 戻る
+</div>
+
+<h1>持ち物</h1>
+
+<div class="add-button" onclick="addPackingItem()">
+＋追加
+</div>
+
+<div id="packingList"></div>
+
+<hr>
+
+<div>
+✈️ 機内持ち込み
+</div>
+
+<div>
+☁️ 余裕があれば
+</div>
+
 </div>
 
 <h1>持ち物</h1>
@@ -173,6 +207,7 @@ function openPacking(){
     document.querySelector('.todo').style.display='none';
 
     document.getElementById('packingPage').classList.remove('hidden');
+    renderPacking();
 }
 
 function closePacking(){
@@ -183,7 +218,78 @@ function closePacking(){
 
     document.getElementById('packingPage').classList.add('hidden');
 }
+let packingItems = [
+    {
+        name:"財布",
+        carry:false,
+        optional:false
+    },
+    {
+        name:"スマホ",
+        carry:true,
+        optional:false
+    },
+    {
+        name:"着替え",
+        carry:false,
+        optional:true
+    }
+];
 
+function renderPacking(){
+
+    const list =
+        document.getElementById("packingList");
+
+    list.innerHTML = "";
+
+    packingItems.forEach(item=>{
+
+        let tags = "";
+
+        if(item.carry){
+            tags += " ✈️";
+        }
+
+        if(item.optional){
+            tags += " ☁️";
+        }
+
+        list.innerHTML += `
+        <div class="packing-item">
+            ☐ ${item.name}${tags}
+        </div>
+        `;
+    });
+}
+
+function addPackingItem(){
+
+    const name =
+        prompt("持ち物名");
+
+    if(!name){
+        return;
+    }
+
+    const carry =
+        confirm(
+        "機内持ち込みですか？"
+        );
+
+    const optional =
+        confirm(
+        "余裕があれば持っていく物ですか？"
+        );
+
+    packingItems.push({
+        name:name,
+        carry:carry,
+        optional:optional
+    });
+
+    renderPacking();
+}
 </script>
     
 </body>
