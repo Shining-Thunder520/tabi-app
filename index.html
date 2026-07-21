@@ -220,6 +220,45 @@ function closePacking(){
     }
 ];
 
+function savePacking() {
+    const items = [];
+
+    document.querySelectorAll("#packingList .packing-item").forEach(item => {
+        const checkbox = item.querySelector("input");
+        const text = item.textContent.trim();
+
+        items.push({
+            name: text,
+            checked: checkbox.checked
+        });
+    });
+
+    localStorage.setItem("packingList", JSON.stringify(items));
+}
+
+function loadPacking() {
+    const data = JSON.parse(localStorage.getItem("packingList")) || [];
+
+    const list = document.getElementById("packingList");
+    list.innerHTML = "";
+
+    data.forEach(item => {
+        const div = document.createElement("div");
+        div.className = "packing-item";
+
+        div.innerHTML = `
+            <label>
+                <input type="checkbox" ${item.checked ? "checked" : ""}>
+                ${item.name}
+            </label>
+        `;
+
+        div.querySelector("input").addEventListener("change", savePacking);
+
+        list.appendChild(div);
+    });
+}
+    
 function renderPacking(){
 
     const list =
@@ -251,34 +290,28 @@ onclick="togglePacking(${index})">
     });
 }
 
-function addPackingItem(){
+function addPackingItem() {
+    const name = prompt("持ち物を入力してください");
 
-    const name =
-        prompt("持ち物名");
+    if (!name) return;
 
-    if(!name){
-        return;
-    }
+    const list = document.getElementById("packingList");
 
-    const carry =
-        confirm(
-        "機内持ち込みですか？"
-        );
+    const item = document.createElement("div");
+    item.className = "packing-item";
 
-    const optional =
-        confirm(
-        "余裕があれば持っていく物ですか？"
-        );
+    item.innerHTML = `
+        <label>
+            <input type="checkbox">
+            ${name}
+        </label>
+    `;
 
-    packingItems.push({
-    name:name,
-    carry:carry,
-    optional:optional,
-    checked:false
-});
+    list.appendChild(item);
 
-    renderPacking();
+    savePacking();
 }
+    
 function togglePacking(index){
 
     packingItems[index].checked =
