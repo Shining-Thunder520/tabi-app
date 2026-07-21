@@ -292,26 +292,21 @@ onclick="togglePacking(${index})">
 }
 
 function addPackingItem() {
+
     const name = prompt("持ち物を入力してください");
 
     if (!name) return;
 
-    const list = document.getElementById("packingList");
-
-    const item = document.createElement("div");
-    item.className = "packing-item";
-
-    item.innerHTML = `
-    item.querySelector("input").addEventListener("change", savePacking);
-        <label>
-            <input type="checkbox">
-            ${name}
-        </label>
-    `;
-
-    list.appendChild(item);
+    packingItems.push({
+        name: name,
+        carry: false,
+        optional: false,
+        checked: false
+    });
 
     savePacking();
+    renderPacking();
+
 }
     
 function togglePacking(index){
